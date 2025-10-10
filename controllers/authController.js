@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const nodemailer = require('nodemailer');
-const OTP = require('../models/otp');
+const OTP = require('../models/OTP');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 require('dotenv').config();
