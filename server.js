@@ -84,7 +84,7 @@ initSocket(server);
 
 // Middlewares
 app.use(cors({
-  origin: process.env.CLIENT_URL || '*',
+  origin: ['https://coaching-backend-fzqj.onrender.com'],     //process.env.CLIENT_URL || '*',
   methods: ['GET','POST','PUT','DELETE','OPTIONS']
 }));
 app.use(express.json());

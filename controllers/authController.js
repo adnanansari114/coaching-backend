@@ -111,6 +111,13 @@ const registerUser = async (req, res) => {
 
 // Login User
 const loginUser = async (req, res) => {
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // agar email ya password invalid hai to yahan se 400 return karega
+    return res.status(400).json({ message: 'Invalid input', errors: errors.array() });
+  }
+
   const { email, password } = req.body;
 
   try {

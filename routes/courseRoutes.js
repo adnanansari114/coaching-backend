@@ -1,5 +1,3 @@
-// routes/courseRoutes.js
-
 const express = require('express');
 const { protect } = require('../middleware/authMiddleware');
 const { user, teacher, student } = require('../middleware/roleMiddleware');

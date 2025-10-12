@@ -5,7 +5,7 @@ let io;
 exports.initSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: "*", // React frontend ka URL daalna chaho to daal sakte ho
+      origin: "https://coaching-backend-fzqj.onrender.com", // React frontend ka URL daalna chaho to daal sakte ho
       methods: ["GET", "POST"],
     },
   });
