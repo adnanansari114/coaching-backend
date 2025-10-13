@@ -1,57 +1,3 @@
-// import express from "express";
-// import dotenv from "dotenv";
-// import cors from "cors";
-// import http from "http";
-// import { initSocket } from "./socket.js";
-// import connectDB from "./config/db.js";
-// import authRoutes from "./routes/authRoutes.js";
-// import userRoutes from "./routes/userRoutes.js";
-// import courseRoutes from "./routes/courseRoutes.js";
-// import quizRoutes from "./routes/quizRoutes.js";
-// import adminRoutes from "./routes/adminRoutes.js";
-// import reviewRoutes from "./routes/reviewRoutes.js";
-// import topperRoutes from "./routes/topperRoutes.js";
-// import classRoutes from "./routes/classRoutes.js";
-// import path from 'path';
-// import { fileURLToPath } from "url";
-
-// dotenv.config();
-// connectDB();
-
-// const app = express();
-// const server = http.createServer(app);
-// //initSocket(server); // ✅ real-time quiz
-
-// const io = initSocket(server);
-// app.set("socketio", io);
-
-// // app.use(cors());
-// app.use(cors({ origin: "http://localhost:5173", credentials: true }));
-
-// app.use(express.json());
-
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
-
-// // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// app.use("/uploads", express.static("backend/uploads"));
-
-// // API routes
-// app.use("/api/auth", authRoutes);
-// app.use("/api/users", userRoutes);
-// app.use("/api/courses", courseRoutes);
-// app.use("/api/quizzes", quizRoutes);
-// app.use("/api/classes", classRoutes);
-// app.use("/api/admin", adminRoutes);
-// app.use("/api/toppers", topperRoutes); 
-// app.use("/api/reviews", reviewRoutes);
-
-// const PORT = process.env.PORT || 5000;
-// server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-
-
-// back/server.js
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -84,7 +30,7 @@ initSocket(server);
 
 // Middlewares
 app.use(cors({
-  origin: ['https://coaching-backend-fzqj.onrender.com'],     //process.env.CLIENT_URL || '*',
+  origin: process.env.CLIENT_URL || 'https://coaching-frontend-ktd0.onrender.com',
   methods: ['GET','POST','PUT','DELETE','OPTIONS']
 }));
 app.use(express.json());
