@@ -1,18 +1,19 @@
 const User = require('../models/User');
-const nodemailer = require('nodemailer');
+// const nodemailer = require('nodemailer');
 const OTP = require('../models/OTP');
+const sendEmail = require('../utils/sendEmail')
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 require('dotenv').config();
 
 // Setup Nodemailer transporter
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+// const transporter = nodemailer.createTransport({
+//   service: 'Gmail',
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS
+//   }
+// });
 
 // Generate JWT Token
 const generateToken = (id, role) => {
@@ -45,14 +46,12 @@ const sendOTP = async (req, res) => {
     const otp = generateOTP();
     await OTP.create({ email: email.toLowerCase(), otp });
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
+    await sendEmail({
+      email,
       subject: 'Your OTP for Registration',
-      text: `Your OTP is ${otp}. It is valid for 5 minutes.`
-    };
+      message: `<p>Your OTP is <b>${otp}</b>. It is valid for 5 minutes.</p>`
+    });
 
-    await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'OTP sent to your email.' });
   } catch (error) {
     console.error('Error sending OTP:', error);
@@ -195,14 +194,12 @@ const forgetPassword = async (req, res) => {
     const otp = generateOTP();
     await OTP.create({ email: email.toLowerCase(), otp });
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
+    await sendEmail({
+      email,
       subject: 'Your OTP for Password Reset',
-      text: `Your OTP for password reset is ${otp}. It is valid for 5 minutes.`
-    };
+      message: `<p>Your OTP is <b>${otp}</b>. It is valid for 5 minutes.</p>`
+    });
 
-    await transporter.sendMail(mailOptions);
     res.status(200).json({ message: 'OTP sent to your email for password reset.' });
   } catch (error) {
     console.error('Error sending forget password OTP:', error);
