@@ -1,21 +1,10 @@
 const User = require('../models/User');
-// const nodemailer = require('nodemailer');
 const OTP = require('../models/OTP');
 const sendEmail = require('../utils/sendEmail')
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 require('dotenv').config();
 
-// Setup Nodemailer transporter
-// const transporter = nodemailer.createTransport({
-//   service: 'Gmail',
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS
-//   }
-// });
-
-// Generate JWT Token
 const generateToken = (id, role) => {
   if (!process.env.JWT_SECRET) {
     throw new Error('JWT_SECRET is not defined in .env');
@@ -46,11 +35,11 @@ const sendOTP = async (req, res) => {
     const otp = generateOTP();
     await OTP.create({ email: email.toLowerCase(), otp });
 
-    await sendEmail({
-      email,
-      subject: 'Your OTP for Registration',
-      message: `<p>Your OTP is <b>${otp}</b>. It is valid for 5 minutes.</p>`
-    });
+    const info = await sendEmail({ email, subject: 'Your OTP for Registration', message: `<p>OTP: <b>${otp}</b></p>` });
+    console.log('Brevo sendMail response:', info);
+    if (info && info.rejected && info.rejected.length > 0) {
+      return res.status(500).json({ message: 'Email rejected by SMTP provider', details: info });
+    }
 
     res.status(200).json({ message: 'OTP sent to your email.' });
   } catch (error) {

@@ -1,36 +1,34 @@
-const nodemailer = require('nodemailer');
+const axios = require("axios");
 const dotenv = require('dotenv');
 dotenv.config();
 
 const sendEmail = async ({ email, subject, message }) => {
   try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,  // e.g. smtp-relay.brevo.com
-      port: process.env.EMAIL_PORT,  // e.g. 587
-      secure: false, // ✅ 587 = TLS (not SSL)
-      auth: {
-        user: process.env.EMAIL_USER, // your Brevo user
-        pass: process.env.EMAIL_PASS, // your Brevo API key
+    const response = await axios.post(
+      "https://api.brevo.com/v3/smtp/email",
+      {
+        sender: { name: "Zenith Education", email: process.env.EMAIL_USER },
+        to: [{ email }],
+        subject,
+        htmlContent: message,
       },
-    });
+      {
+        headers: {
+          "api-key": process.env.BREVO_API_KEY,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-    const mailOptions = {
-      from: `"Zenith Education" <${process.env.EMAIL_USER}>`, // nice branding
-      to: email,
-      subject: subject,
-      html: message,
-    };
-
-    await transporter.sendMail(mailOptions);
-    console.log(`✅ Email sent successfully to ${email}`);
+    console.log("✅ Email sent via Brevo API:", response.data);
+    return response.data; // 🔥 must return
   } catch (error) {
-    console.error('❌ Error sending email:', error.message);
-    throw new Error('Email could not be sent.');
+    console.error("❌ Brevo API email failed:", error.response?.data || error.message);
+    throw new Error("Email could not be sent via Brevo API.");
   }
 };
 
 module.exports = sendEmail;
-
 
 
 
